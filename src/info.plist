@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>bundleid</key>
-	<string>net.deanishe.alfred-convert</string>
+	<string>de.xdevcloud.alfred-convert</string>
 	<key>connections</key>
 	<dict>
 		<key>1E12C11D-30DB-44A8-AD75-F5BE7F2DA451</key>
@@ -158,7 +158,7 @@
 		</array>
 	</dict>
 	<key>createdby</key>
-	<string>Dean Jackson</string>
+	<string>Thomas Harr</string>
 	<key>description</key>
 	<string>Free-form conversions between different units</string>
 	<key>disabled</key>
@@ -174,6 +174,8 @@
 				<false/>
 				<key>clipboardtext</key>
 				<string>{query}</string>
+				<key>ignoredynamicplaceholders</key>
+				<false/>
 				<key>transient</key>
 				<false/>
 			</dict>
@@ -259,6 +261,8 @@ echo "https_proxy=$https_proxy"&gt;&amp;2
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>availableviaurlhandler</key>
+				<false/>
 				<key>triggerid</key>
 				<string>convert</string>
 			</dict>
@@ -353,6 +357,8 @@ variables={allvars}</string>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>availableviaurlhandler</key>
+				<false/>
 				<key>triggerid</key>
 				<string>config</string>
 			</dict>
@@ -529,112 +535,114 @@ UPDATE_INTERVAL is the number of minutes between exchange rate updates.</string>
 		<key>03379773-30CB-4371-BC49-8E2EA4C9947A</key>
 		<dict>
 			<key>xpos</key>
-			<integer>1070</integer>
+			<real>1070</real>
 			<key>ypos</key>
-			<integer>170</integer>
+			<real>170</real>
 		</dict>
 		<key>070B760D-0FE5-427B-9AFE-E617CDAF3601</key>
 		<dict>
 			<key>xpos</key>
-			<integer>1070</integer>
+			<real>1070</real>
 			<key>ypos</key>
-			<integer>340</integer>
+			<real>340</real>
 		</dict>
 		<key>14C63701-669A-43A3-BF6A-65A23759DA5F</key>
 		<dict>
 			<key>xpos</key>
-			<integer>610</integer>
+			<real>610</real>
 			<key>ypos</key>
-			<integer>340</integer>
+			<real>340</real>
 		</dict>
 		<key>1E12C11D-30DB-44A8-AD75-F5BE7F2DA451</key>
 		<dict>
 			<key>note</key>
 			<string>Perform conversion</string>
 			<key>xpos</key>
-			<integer>210</integer>
+			<real>210</real>
 			<key>ypos</key>
-			<integer>110</integer>
+			<real>110</real>
 		</dict>
 		<key>4489D9A5-121F-4F86-A8B9-6B6E7A49CEA6</key>
 		<dict>
 			<key>xpos</key>
-			<integer>440</integer>
+			<real>440</real>
 			<key>ypos</key>
-			<integer>140</integer>
+			<real>140</real>
 		</dict>
 		<key>4F101B56-DE40-4D36-8D3D-E5E01A83C8D0</key>
 		<dict>
 			<key>note</key>
 			<string>Set query from var:query</string>
 			<key>xpos</key>
-			<integer>980</integer>
+			<real>980</real>
 			<key>ypos</key>
-			<integer>370</integer>
+			<real>370</real>
 		</dict>
 		<key>54F0C711-EDE6-4387-B397-34AB8A8FFCB2</key>
 		<dict>
 			<key>note</key>
 			<string>Default action</string>
 			<key>xpos</key>
-			<integer>650</integer>
+			<real>650</real>
 			<key>ypos</key>
-			<integer>70</integer>
+			<real>70</real>
 		</dict>
 		<key>607FA0B2-94A5-48E4-96E9-0BFA8872F7EE</key>
 		<dict>
 			<key>xpos</key>
-			<integer>770</integer>
+			<real>770</real>
 			<key>ypos</key>
-			<integer>40</integer>
+			<real>40</real>
 		</dict>
 		<key>96CC03AC-25D6-4FDB-AA8B-FCF145F4D597</key>
 		<dict>
 			<key>xpos</key>
-			<integer>410</integer>
+			<real>410</real>
 			<key>ypos</key>
-			<integer>340</integer>
+			<real>340</real>
 		</dict>
 		<key>C1740EC8-21DE-4062-A3F3-A46CDC61EFFF</key>
 		<dict>
 			<key>xpos</key>
-			<integer>40</integer>
+			<real>40</real>
 			<key>ypos</key>
-			<integer>110</integer>
+			<real>110</real>
 		</dict>
 		<key>CFE51A32-D227-42BA-966C-DBDED818F1D4</key>
 		<dict>
 			<key>note</key>
 			<string>Save/delete unit</string>
 			<key>xpos</key>
-			<integer>650</integer>
+			<real>650</real>
 			<key>ypos</key>
-			<integer>200</integer>
+			<real>200</real>
 		</dict>
 		<key>DA12DA9F-7A81-4D31-BECF-ADF453BB814C</key>
 		<dict>
 			<key>xpos</key>
-			<integer>40</integer>
+			<real>40</real>
 			<key>ypos</key>
-			<integer>340</integer>
+			<real>340</real>
 		</dict>
 		<key>EF92F243-C49B-4DFC-B0A4-72317B2457A7</key>
 		<dict>
 			<key>note</key>
 			<string>View currencies and edit configuration</string>
 			<key>xpos</key>
-			<integer>210</integer>
+			<real>210</real>
 			<key>ypos</key>
-			<integer>340</integer>
+			<real>340</real>
 		</dict>
 		<key>F738EA53-3486-4210-B03B-CFB792FD1798</key>
 		<dict>
 			<key>xpos</key>
-			<integer>770</integer>
+			<real>770</real>
 			<key>ypos</key>
-			<integer>170</integer>
+			<real>170</real>
 		</dict>
 	</dict>
+	<key>userconfigurationconfig</key>
+	<array/>
 	<key>variables</key>
 	<dict>
 		<key>APP_KEY</key>
@@ -659,8 +667,8 @@ UPDATE_INTERVAL is the number of minutes between exchange rate updates.</string>
 		<string>APP_KEY</string>
 	</array>
 	<key>version</key>
-	<string>3.7.1</string>
+	<string>4.0.0</string>
 	<key>webaddress</key>
-	<string></string>
+	<string>https://github.com/harrtho/alfred-convert</string>
 </dict>
 </plist>

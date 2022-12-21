@@ -156,6 +156,7 @@ See [CHANGELOG][changelog] for more information.
 
 | Release         | Date           |
 | --------------- | -------------- |
+| [4.0.0][v4.0.0] | 2022-12-21     |
 | [3.7.0][v3.7.0] | 2020-02-20     |
 | [3.6.2][v3.6.2] | 2019-09-06     |
 | [3.6.1][v3.6.1] | 2019-05-30     |
@@ -232,6 +233,7 @@ All other code/media are released under the [MIT Licence][mit].
 [v3.6.1]: https://github.com/deanishe/alfred-convert/releases/tag/v3.6.1
 [v3.6.2]: https://github.com/deanishe/alfred-convert/releases/tag/v3.6.2
 [v3.7.0]: https://github.com/deanishe/alfred-convert/releases/tag/v3.7.0
+[v4.0.0]: https://github.com/harrtho/alfred-convert/releases/tag/v4.0.0
 [cryptocompare]: https://www.cryptocompare.com/
 [openx]: https://openexchangerates.org/
 [openx-free]: https://openexchangerates.org/signup/free
