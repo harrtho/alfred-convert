@@ -22,16 +22,15 @@
 
 """
 
-from collections import defaultdict
-from functools import total_ordering
 import json
 import os
-import tempfile
 import re
 import subprocess
+import tempfile
+from collections import defaultdict
+from functools import total_ordering
 
-from . import workflow
-from . import web
+from . import web, workflow
 
 # __all__ = []
 
