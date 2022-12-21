@@ -1,6 +1,7 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # encoding: utf-8
 #
+# Copyright (c) 2022 Thomas Harr <xDevThomas@gmail.com>
 # Copyright (c) 2017 Dean Jackson <deanishe@deanishe.net>
 #
 # MIT Licence. See http://opensource.org/licenses/MIT
@@ -13,12 +14,11 @@ Take list of all/wanted currencies and filter it by whether
 openexchangerates.org offers exchange rates.
 """
 
-from __future__ import print_function, absolute_import
-
 import csv
 import os
-import requests
 import sys
+
+import requests
 
 reference_currency = 'USD'
 api_key = None
@@ -60,7 +60,7 @@ def load_currencies(*filepaths):
         with open(filepath, 'rb') as fp:
             reader = csv.reader(fp, delimiter=b'\t')
             for row in reader:
-                symbol, name = [unicode(s, 'utf-8') for s in row]
+                symbol, name = row
                 currencies[symbol] = name
 
     return currencies

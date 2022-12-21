@@ -1,7 +1,8 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # encoding: utf-8
 #
-# Copyright  (c) 2014 deanishe@deanishe.net
+# Copyright (c) 2022 Thomas Harr <xDevThomas@gmail.com>
+# Copyright (c) 2014 Dean Jackson <deanishe@deanishe.net>
 #
 # MIT Licence. See http://opensource.org/licenses/MIT
 #
@@ -10,37 +11,21 @@
 
 """Drives Script Filter to show unit conversions in Alfred 3."""
 
-from __future__ import print_function
-
 import os
 import sys
 
-from pint import UnitRegistry, UndefinedUnitError, DimensionalityError
-
-from workflow import Workflow3, ICON_WARNING, ICON_INFO
-from workflow.background import run_in_background, is_running
-from workflow.update import Version
-from config import (
-    bootstrap,
-    DEFAULT_UNIT_DEFINITIONS,
-    BUILTIN_UNIT_DEFINITIONS,
-    COPY_UNIT,
-    CURRENCY_CACHE_AGE,
-    CURRENCY_CACHE_NAME,
-    CURRENCY_DECIMAL_PLACES,
-    CUSTOM_DEFINITIONS_FILENAME,
-    DECIMAL_PLACES,
-    DECIMAL_SEPARATOR,
-    DEFAULT_SETTINGS,
-    DYNAMIC_DECIMALS,
-    HELP_URL,
-    ICON_UPDATE,
-    NOKEY_FILENAME,
-    OPENX_APP_KEY,
-    THOUSANDS_SEPARATOR,
-    UPDATE_SETTINGS,
-)
+from config import (BUILTIN_UNIT_DEFINITIONS, COPY_UNIT, CURRENCY_CACHE_AGE,
+                    CURRENCY_CACHE_NAME, CURRENCY_DECIMAL_PLACES,
+                    CUSTOM_DEFINITIONS_FILENAME, DECIMAL_PLACES,
+                    DECIMAL_SEPARATOR, DEFAULT_SETTINGS,
+                    DEFAULT_UNIT_DEFINITIONS, DYNAMIC_DECIMALS, HELP_URL,
+                    ICON_UPDATE, NOKEY_FILENAME, OPENX_APP_KEY,
+                    THOUSANDS_SEPARATOR, UPDATE_SETTINGS, bootstrap)
 from defaults import Defaults
+from pint import DimensionalityError, UndefinedUnitError, UnitRegistry
+from workflow import ICON_INFO, ICON_WARNING, Workflow
+from workflow.background import is_running, run_in_background
+from workflow.update import Version
 
 log = None
 
@@ -58,7 +43,7 @@ def unit_is_currency(unit):
 def open_currency_instructions():
     """Magic action to open help in browser."""
     import webbrowser
-    webbrowser.open('https://github.com/deanishe/alfred-convert#conversions')
+    webbrowser.open('https://github.com/harrtho/alfred-convert#conversions')
     return 'Opening instructions in browser...'
 
 
@@ -138,7 +123,7 @@ class Input(object):
     @property
     def is_currency(self):
         """`True` if Input is a currency."""
-        return self.dimensionality == u'[currency]'
+        return self.dimensionality == '[currency]'
 
     def __repr__(self):
         """Code-like representation of `Input`."""
@@ -217,11 +202,11 @@ class Formatter(object):
 
     def formatted(self, n, unit=None):
         """Format number with thousands and decimal separators."""
-        sep = u''
+        sep = ''
         if self.thousands_separator:
-            sep = u','
+            sep = ','
 
-        fmt = u'{{:0{}.{:d}f}}'.format(sep, self._decimal_places(n))
+        fmt = '{{:0{}.{:d}f}}'.format(sep, self._decimal_places(n))
         num = fmt.format(n)
         # log.debug('n=%r, fmt=%r, num=%r', n, fmt, num)
         num = num.replace(',', '||comma||')
@@ -230,20 +215,20 @@ class Formatter(object):
         num = num.replace('||point||', self.decimal_separator)
 
         if unit:
-            num = u'{} {}'.format(num, unit)
+            num = '{} {}'.format(num, unit)
 
         return num
 
     def formatted_no_thousands(self, n, unit=None):
         """Format number with decimal separator only."""
-        fmt = u'{{:0.{:d}f}}'.format(self._decimal_places(n))
+        fmt = '{{:0.{:d}f}}'.format(self._decimal_places(n))
         num = fmt.format(n)
         # log.debug('n=%r, fmt=%r, num=%r', n, fmt, num)
         num = num.replace('.', '||point||')
         num = num.replace('||point||', self.decimal_separator)
 
         if unit:
-            num = u'{} {}'.format(num, unit)
+            num = '{} {}'.format(num, unit)
 
         return num
 
@@ -271,7 +256,7 @@ class Conversion(object):
 
     def __str__(self):
         """Pretty string representation."""
-        return u'{:f} {} = {:f} {} {}'.format(
+        return '{:f} {} = {:f} {} {}'.format(
             self.from_number, self.from_unit, self.to_number, self.to_unit,
             self.dimensionality).encode('utf-8')
 
@@ -386,9 +371,9 @@ class Converter(object):
         # Create `Input` from parsed query
         tu = None
         if to_unit:
-            tu = unicode(to_unit.units)
-        i = Input(from_unit.magnitude, unicode(from_unit.dimensionality),
-                  unicode(from_unit.units), tu, ctx)
+            tu = to_unit.units
+        i = Input(from_unit.magnitude, from_unit.dimensionality,
+                  from_unit.units, tu, ctx)
 
         log.debug('[parser] %s', i)
 
@@ -559,26 +544,26 @@ def convert(query):
     try:
         i = c.parse(query)
     except ValueError as err:
-        log.critical(u'invalid query (%s): %s', query, err)
-        error = err.message
+        log.critical('invalid query (%s): %s', query, err)
+        error = str(err)
 
     else:
         try:
             results = c.convert(i)
             # log.debug('results=%r', results)
         except NoToUnits:
-            log.critical(u'No to_units (or defaults) for %s', i.dimensionality)
-            error = u'No destination units (or defaults) for {}'.format(
+            log.critical('No to_units (or defaults) for %s', i.dimensionality)
+            error = 'No destination units (or defaults) for {}'.format(
                 i.dimensionality)
 
         except DimensionalityError as err:
-            log.critical(u'invalid conversion (%s): %s', query, err)
+            log.critical('invalid conversion (%s): %s', query, err)
             error = u"Can't convert from {} {} to {} {}".format(
                 err.units1, err.dim1, err.units2, err.dim2)
 
         except KeyError as err:
-            log.critical(u'invalid context (%s): %s', i.context, err)
-            error = u'Unknown context: {}'.format(i.context)
+            log.critical('invalid context (%s): %s', i.context, err)
+            error = 'Unknown context: {}'.format(i.context)
 
     if not error and not results:
         error = 'Conversion input not understood'
@@ -615,11 +600,11 @@ def convert(query):
 
             mod = it.add_modifier(
                 'cmd',
-                u'{} {} as default unit for {}'.format(
+                '{} {} as default unit for {}'.format(
                     name, conv.to_unit, conv.dimensionality))
             mod.setvar('action', action)
-            mod.setvar('unit', conv.to_unit)
-            mod.setvar('dimensionality', conv.dimensionality)
+            mod.setvar('unit', str(conv.to_unit))
+            mod.setvar('dimensionality', str(conv.dimensionality))
 
     wf.send_feedback()
     log.debug('finished')
@@ -667,25 +652,25 @@ def main(wf):
 
     if not wf.cached_data_fresh(CURRENCY_CACHE_NAME, CURRENCY_CACHE_AGE):
         # Update currency rates
-        cmd = ['/usr/bin/python', wf.workflowfile('currency.py')]
+        cmd = ['/usr/local/bin/python3', wf.workflowfile('currency.py')]
         run_in_background('update', cmd)
         wf.rerun = 0.5
 
     if is_running('update'):
         wf.rerun = 0.5
         if exchange_rates is None:  # No data cached yet
-            wf.add_item(u'Fetching exchange rates…',
+            wf.add_item('Fetching exchange rates…',
                         'Currency conversions will be momentarily possible',
                         icon=ICON_INFO)
         else:
-            wf.add_item(u'Updating exchange rates…',
+            wf.add_item('Updating exchange rates…',
                         icon=ICON_INFO)
 
     return convert(query)
 
 
 if __name__ == '__main__':
-    wf = Workflow3(update_settings=UPDATE_SETTINGS,
+    wf = Workflow(update_settings=UPDATE_SETTINGS,
                    default_settings=DEFAULT_SETTINGS,
                    help_url=HELP_URL)
     log = wf.logger

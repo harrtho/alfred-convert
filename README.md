@@ -2,7 +2,7 @@
 Alfred-Convert
 ==============
 
-Convert between different units offline in [Alfred 3 & 4][alfred].
+Convert between different units offline in [Alfred 4 & 5][alfred].
 
 ![][demo]
 
@@ -195,19 +195,18 @@ Thanks, copyright, licensing
 - The Python [Pint][pintdocs] library does all the heavy lifting. See the [Pint GitHub repo][pintrepo] for Pint licensing or `LICENSE.txt` and `AUTHORS.txt` in the `pint` subdirectory.
 - The workflow icons are from [Font Awesome][fontawesome]
 - Exchange rates are downloaded from [openexchangerates.org][openx] and [CryptoCompare][cryptocompare] (for cryptocurrencies).
-- The [Alfred-Workflow][alfred-workflow] library is used heavily.
+- The [Alfred-PyWorkflow][alfred-pyworkflow] library is used heavily.
 
 All other code/media are released under the [MIT Licence][mit].
 
-
-[alfred-workflow]: http://www.deanishe.net/alfred-workflow/
+[alfred-pyworkflow]: https://xdevcloud.de/alfred-pyworkflow/
 [alfred]: http://www.alfredapp.com/
 [changelog]: ./CHANGELOG.md
-[demo]: https://raw.github.com/deanishe/alfred-convert/master/demo.gif
+[demo]: https://raw.github.com/harrtho/alfred-convert/master/demo.gif
 [fontawesome]: http://fortawesome.github.io/Font-Awesome/
-[ghissues]: https://github.com/deanishe/alfred-convert/issues
-[ghpulls]: https://github.com/deanishe/alfred-convert/pulls
-[ghreleases]: https://github.com/deanishe/alfred-convert/releases
+[ghissues]: https://github.com/harrtho/alfred-convert/issues
+[ghpulls]: https://github.com/harrtho/alfred-convert/pulls
+[ghreleases]: https://github.com/harrtho/alfred-convert/releases
 [mit]: http://opensource.org/licenses/MIT
 [pintdocs]: http://pint.readthedocs.org/en/latest/index.html
 [pinthowto]: http://pint.readthedocs.org/en/latest/defining.html

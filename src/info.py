@@ -1,7 +1,8 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 # encoding: utf-8
 #
-# Copyright  (c) 2014 deanishe@deanishe.net
+# Copyright (c) 2022 Thomas Harr <xDevThomas@gmail.com>
+# Copyright (c) 2014 Dean Jackson <deanishe@deanishe.net>
 #
 # MIT Licence. See http://opensource.org/licenses/MIT
 #
@@ -31,42 +32,24 @@ Options:
 
 """
 
-from __future__ import absolute_import
-
-from datetime import timedelta
 import subprocess
 import sys
+from datetime import timedelta
 
+from config import (ACTIVE_CURRENCIES_FILENAME, CRYPTO_CURRENCIES, CURRENCIES,
+                    CURRENCY_CACHE_NAME, CUSTOM_DEFINITIONS_FILENAME,
+                    ICON_CURRENCY, ICON_HELP, README_URL, bootstrap)
 from docopt import docopt
-
-from workflow import (
-    ICON_INFO,
-    ICON_WARNING,
-    ICON_WEB,
-    MATCH_ALL,
-    MATCH_ALLCHARS,
-    Workflow3,
-)
+from workflow import (ICON_INFO, ICON_WARNING, ICON_WEB, MATCH_ALL,
+                      MATCH_ALLCHARS, Workflow)
 from workflow.util import run_trigger
-
-from config import (
-    bootstrap,
-    ACTIVE_CURRENCIES_FILENAME,
-    CURRENCIES,
-    CRYPTO_CURRENCIES,
-    CURRENCY_CACHE_NAME,
-    CUSTOM_DEFINITIONS_FILENAME,
-    ICON_CURRENCY,
-    ICON_HELP,
-    README_URL,
-)
 
 # Signup page for free API key
 SIGNUP_URL = 'https://openexchangerates.org/signup/free'
 
 log = None
 
-DELIMITER = u'\u203a'  # SINGLE RIGHT-POINTING ANGLE QUOTATION MARK
+DELIMITER = '\u203a'  # SINGLE RIGHT-POINTING ANGLE QUOTATION MARK ›
 
 
 def human_timedelta(td):
@@ -78,7 +61,7 @@ def human_timedelta(td):
         td (datetime.timedelta): Time delta to convert.
 
     Returns:
-        unicode: Human-readable time delta.
+        str: Human-readable time delta.
 
     """
     output = []
@@ -94,7 +77,7 @@ def human_timedelta(td):
 
         elif i > 1:
             output.append('%d %ss' % (i, unit))
-        
+
         # we want to ignore only leading zero values
         # otherwise we'll end up with times like
         # "3 days and 10 seconds"
@@ -152,8 +135,8 @@ def handle_delimited_query(query):
                         icon=ICON_WARNING)
 
         for name, symbol in currencies:
-            wf.add_item(u'{} // {}'.format(name, symbol),
-                        u'Use `{}` in conversions'.format(symbol),
+            wf.add_item('{} // {}'.format(name, symbol),
+                        'Use `{}` in conversions'.format(symbol),
                         copytext=symbol,
                         valid=False,
                         icon=ICON_CURRENCY)
@@ -214,7 +197,7 @@ def main(wf):
 
         dict(title='View All Supported Currencies',
              subtitle='View and search list of supported currencies',
-             autocomplete=u'currencies {} '.format(DELIMITER),
+             autocomplete='currencies {} '.format(DELIMITER),
              icon=ICON_CURRENCY),
 
         dict(title='Edit Active Currencies',
@@ -252,6 +235,6 @@ def main(wf):
 
 
 if __name__ == '__main__':
-    wf = Workflow3()
+    wf = Workflow()
     log = wf.logger
     sys.exit(wf.run(main))

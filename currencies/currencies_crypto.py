@@ -1,6 +1,7 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # encoding: utf-8
 #
+# Copyright (c) 2022 Thomas Harr <xDevThomas@gmail.com>
 # Copyright (c) 2017 Dean Jackson <deanishe@deanishe.net>
 #
 # MIT Licence. See http://opensource.org/licenses/MIT
@@ -12,14 +13,13 @@
 Filter list of cryptocurrencies by whether an exchange rate is available.
 """
 
-from __future__ import print_function, absolute_import
-
-from collections import namedtuple
 import csv
-from itertools import izip_longest
 import os
-import requests
+from collections import namedtuple
+from itertools import izip_longest
 from time import sleep
+
+import requests
 
 reference_currency = 'USD'
 

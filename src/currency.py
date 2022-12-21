@@ -1,7 +1,8 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # encoding: utf-8
 #
-# Copyright  (c) 2014 deanishe@deanishe.net
+# Copyright (c) 2022 Thomas Harr <xDevThomas@gmail.com>
+# Copyright (c) 2014 Dean Jackson <deanishe@deanishe.net>
 #
 # MIT Licence. See http://opensource.org/licenses/MIT
 #
@@ -10,31 +11,17 @@
 
 """Script to update exchange rates in the background."""
 
-from __future__ import print_function
-
-from itertools import izip_longest
-from multiprocessing.dummy import Pool
 import os
 import time
+from itertools import zip_longest
+from multiprocessing.dummy import Pool
 
+from config import (ACTIVE_CURRENCIES_FILENAME, CRYPTO_COMPARE_BASE_URL,
+                    CRYPTO_CURRENCIES, CURRENCIES, CURRENCY_CACHE_AGE,
+                    CURRENCY_CACHE_NAME, OPENX_API_URL, OPENX_APP_KEY,
+                    REFERENCE_CURRENCY, SYMBOLS_PER_REQUEST, USER_AGENT,
+                    XRA_API_URL, bootstrap)
 from workflow import Workflow, web
-
-from config import (
-    bootstrap,
-    ACTIVE_CURRENCIES_FILENAME,
-    CURRENCY_CACHE_AGE,
-    CURRENCY_CACHE_NAME,
-    REFERENCE_CURRENCY,
-    CURRENCIES,
-    CRYPTO_CURRENCIES,
-    CRYPTO_COMPARE_BASE_URL,
-    OPENX_API_URL,
-    OPENX_APP_KEY,
-    SYMBOLS_PER_REQUEST,
-    USER_AGENT,
-    XRA_API_URL,
-)
-
 
 log = None
 
@@ -54,7 +41,7 @@ def grouper(n, iterable):
     sentinel = object()
     args = [iter(iterable)] * n
     groups = []
-    for l in izip_longest(*args, fillvalue=sentinel):
+    for l in zip_longest(*args, fillvalue=sentinel):
         groups.append([v for v in l if v is not sentinel])
     return groups
 

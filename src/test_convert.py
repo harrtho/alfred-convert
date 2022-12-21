@@ -1,6 +1,7 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 # encoding: utf-8
 #
+# Copyright (c) 2022 Thomas Harr <xDevThomas@gmail.com>
 # Copyright (c) 2017 Dean Jackson <deanishe@deanishe.net>
 #
 # MIT Licence. See http://opensource.org/licenses/MIT
@@ -10,13 +11,10 @@
 
 """Test converter."""
 
-from __future__ import print_function, absolute_import
-
-from collections import namedtuple
 import logging
+from collections import namedtuple
 
 import pytest
-from workflow import Workflow3
 
 import convert
 from defaults import Defaults
@@ -67,7 +65,7 @@ def test_valid():
         ('1.3 km', T(1.3, '[length]', 'kilometer', None)),
         ('1.3 km miles', T(1.3, '[length]', 'kilometer', 'mile')),
         ('5 m/s kph', T(5.0, '[length] / [time]', 'meter/second', 'kph')),
-        ('21.3 m^2 acres', T(21.3, '[length] ** 2', u'meter²', 'acre')),
+        ('21.3 m^2 acres', T(21.3, '[length] ** 2', 'meter²', 'acre')),
     ]
     c = convert.Converter(None)
     for t in data:
@@ -98,7 +96,7 @@ def test_defaults():
             C(100, 'gram', 100000, 'milligram', '[mass]')]),
     ]
 
-    wf = Workflow3()
+    wf = Workflow()
     if 'default_units' not in wf.settings:
         wf.settings['default_units'] = {}
 
