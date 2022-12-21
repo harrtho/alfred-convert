@@ -1,6 +1,4 @@
-
-Alfred-Convert
-==============
+# Alfred-Convert
 
 Convert between different units offline in [Alfred 4 & 5][alfred].
 
@@ -29,41 +27,41 @@ You can also add your own custom units.
 
 <!-- /MarkdownTOC -->
 
-
 <a name="downloading"></a>
 Downloading
------------
+
+---
 
 Download from [GitHub releases][ghreleases].
 
-**Note**: Version 3.7 and above only supports Alfred 4+. If you're still using Alfred 3, please download [v3.6.2][v3.6.2].
-
+**Note**: Version 4.0 and above only supports Alfred 4+ and Python 3.7+. If you're still using Alfred 3, please download [v3.6.2][v3.6.2].
 
 <a name="usage"></a>
 Usage
------
+
+---
 
 - `conv <quantity> <from unit> [<to unit>]` — Perform a conversion
-    - `↩` — Copy result without thousands separator to pasteboard
-    - `⌘C` — Copy result with thousands separator to pasteboard
-    - `⌘↩` — Add/remove destination unit as default for this dimensionality
-    - `⌘L` — Show result in Alfred's Large Type window
+  - `↩` — Copy result without thousands separator to pasteboard
+  - `⌘C` — Copy result with thousands separator to pasteboard
+  - `⌘↩` — Add/remove destination unit as default for this dimensionality
+  - `⌘L` — Show result in Alfred's Large Type window
 - `convinfo` — View help file and information about the workflow, or edit custom units and active currencies
-    - `View Help File` — Open this page in your browser
-    - `View All Supported Currencies` — View/filter the list of all supported currencies in Alfred
-    - `Edit Active Currencies` — Edit the list of active currencies in your default text editor
-    - `Edit Custom Units` — Edit the list of custom currencies in your default text editor
-
+  - `View Help File` — Open this page in your browser
+  - `View All Supported Currencies` — View/filter the list of all supported currencies in Alfred
+  - `Edit Active Currencies` — Edit the list of active currencies in your default text editor
+  - `Edit Custom Units` — Edit the list of custom currencies in your default text editor
 
 <a name="conversions"></a>
-### Conversions ###
+
+### Conversions
 
 **NOTE**: Only a limited number of fiat currencies are supported by default. Additional rates are only supported if you set a key for the [openexchangerates.org][openx] API in the workflow's [configuration sheet](#configuration). You can sign up for a free account [here][openx-free]. When you're signed up, copy the **App ID** from the email you receive or [this page][openx-appid] into the `APP_KEY` field in the [configuration sheet](#configuration).
 
 - `conv [<context>] <quantity> <from unit> [<to unit>]` — Perform a conversion
-    - `↩` or `⌘C` — Copy the result to the pasteboard
-    - `⌘↩` — Add/remove destination unit as default for this dimensionality
-    - `⌘L` — Show result in Alfred's Large Type window
+  - `↩` or `⌘C` — Copy the result to the pasteboard
+  - `⌘↩` — Add/remove destination unit as default for this dimensionality
+  - `⌘L` — Show result in Alfred's Large Type window
 
 If no destination unit is specified, any defaults you've saved will be used (that aren't the same as the source unit).
 
@@ -83,19 +81,18 @@ It doesn't matter if there is a space between the quantity and the units or not.
 
 Actioning an item (selecting it and hitting `↩`) will copy it to the clipboard. Using `⌘+L` will display the result in Alfred's large text window, `⌘+C` will copy the selected result to the clipboard.
 
-
 <a name="configuration"></a>
-### Configuration ###
+
+### Configuration
 
 The workflow is configured via the [configuration sheet][config-sheet] (the `[𝒙]` icon) in Alfred Preferences and via a couple of text files in its data directory.
 
-
-#### Configuration sheet ####
+#### Configuration sheet
 
 Basic configuration is performed in the [configuration sheet][config-sheet]:
 
-|           Option          |                                                                    Meaning                                                                    |
-|---------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
+| Option                    | Meaning                                                                                                                                       |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
 | `APP_KEY`                 | API key for [openexchangerates.org][openx].                                                                                                   |
 | `COPY_UNIT`               | Include unit when copying conversion result. Any value but `0` or empty turns this option on.                                                 |
 | `CURRENCY_DECIMAL_PLACES` | Overrides the default `DECIMAL_PLACES` setting for currency conversions.                                                                      |
@@ -105,36 +102,34 @@ Basic configuration is performed in the [configuration sheet][config-sheet]:
 | `THOUSANDS_SEPARATOR`     | Character to delimit thousands Used for parsing input and generating output.                                                                  |
 | `UPDATE_INTERVAL`         | How often (in minutes) to update currency exchange rates.                                                                                     |
 
-
-#### Active currencies ####
+#### Active currencies
 
 By default, all supported fiat currencies (provided you've set `APP_KEY` in the [configuration sheet](#configuration)) and a handful of the most popular cryptocurrencies are active.
 
 - `convinfo`
-    - `View All Supported Currencies`
-    - `Edit Active Currencies`
+  - `View All Supported Currencies`
+  - `Edit Active Currencies`
 
 Use `Edit Active Currencies` to open the list of active currencies in your default editor. Add the symbol for the currency you'd like to activate on a new line in this file.
 
 You can use `View All Supported Currencies` to search for the currency you'd like to activate, then use `⌘C` on the result to copy the symbol to the pasteboard.
 
-
-#### Custom units ####
+#### Custom units
 
 See [Adding custom units](#adding-custom-units).
 
-
 <a name="supported-units"></a>
 Supported units
----------------
+
+---
 
 Currently, Alfred-Convert only supports [the units][pintunits] understood by the underlying [Pint][pintdocs] library plus [currencies](#supported-currencies) and a handful of additional units.
 
 You can [add your own custom units](#adding-custom-units) to the workflow. If you think they'd be useful to everyone, please create a corresponding [GitHub issue][ghissues] to request addition as a default unit or submit a [pull request][ghpulls].
 
-
 <a name="supported-currencies"></a>
-### Supported currencies ###
+
+### Supported currencies
 
 To convert, use the appropriate **abbreviation** for the relevant currencies, e.g. `conv 100 eur gbp`.
 
@@ -142,9 +137,9 @@ You can also view (and search) the list from within Alfred by using the keyword 
 
 [All supported currencies](./docs/currencies.md).
 
-
 <a name="adding-custom-units"></a>
-### Adding custom units ###
+
+### Adding custom units
 
 You can add your own custom units using the [format defined by Pint][pinthowto]. Add your definitions to the `unit_definitions.txt` file in the workflow's data directory.
 
@@ -152,15 +147,15 @@ To edit this file, enter `convinfo` in Alfred and select `Edit Custom Units`. Th
 
 Please see the [Pint documentation][pinthowto] for the required format. See Pint's [default unit definitions][pintunits] for examples.
 
-
 <a name="releases"></a>
 Releases
---------
+
+---
 
 See [CHANGELOG][changelog] for more information.
 
-|     Release     |      Date      |
-|-----------------|----------------|
+| Release         | Date           |
+| --------------- | -------------- |
 | [3.7.0][v3.7.0] | 2020-02-20     |
 | [3.6.2][v3.6.2] | 2019-09-06     |
 | [3.6.1][v3.6.1] | 2019-05-30     |
@@ -187,10 +182,10 @@ See [CHANGELOG][changelog] for more information.
 | [1.2][v1.2]     | 2014-08-19     |
 | [1.1][v1.1]     | 2014-08-09     |
 
-
 <a name="thanks-copyright-licensing"></a>
 Thanks, copyright, licensing
-----------------------------
+
+---
 
 - The Python [Pint][pintdocs] library does all the heavy lifting. See the [Pint GitHub repo][pintrepo] for Pint licensing or `LICENSE.txt` and `AUTHORS.txt` in the `pint` subdirectory.
 - The workflow icons are from [Font Awesome][fontawesome]
