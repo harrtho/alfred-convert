@@ -237,7 +237,7 @@
 echo "http_proxy=$http_proxy"&gt;&amp;2
 echo "https_proxy=$https_proxy"&gt;&amp;2
 
-/usr/local/bin/python3 convert.py "$1"</string>
+/usr/bin/env python3 convert.py "$1"</string>
 				<key>scriptargtype</key>
 				<integer>1</integer>
 				<key>scriptfile</key>
@@ -299,7 +299,7 @@ variables={allvars}</string>
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>/usr/local/bin/python3 defaults.py $action "$dimensionality" "$unit"</string>
+				<string>/usr/bin/env python3 defaults.py $action "$dimensionality" "$unit"</string>
 				<key>scriptargtype</key>
 				<integer>1</integer>
 				<key>scriptfile</key>
@@ -397,7 +397,7 @@ variables={allvars}</string>
 				<key>runningsubtext</key>
 				<string></string>
 				<key>script</key>
-				<string>/usr/local/bin/python3 info.py "$1"</string>
+				<string>/usr/bin/env python3 info.py "$1"</string>
 				<key>scriptargtype</key>
 				<integer>1</integer>
 				<key>scriptfile</key>
@@ -447,7 +447,7 @@ variables={allvars}</string>
 				<key>escaping</key>
 				<integer>0</integer>
 				<key>script</key>
-				<string>/usr/local/bin/python3 info.py $1</string>
+				<string>/usr/bin/env python3 info.py $1</string>
 				<key>scriptargtype</key>
 				<integer>1</integer>
 				<key>scriptfile</key>
@@ -667,7 +667,7 @@ UPDATE_INTERVAL is the number of minutes between exchange rate updates.</string>
 		<string>APP_KEY</string>
 	</array>
 	<key>version</key>
-	<string>4.0.2</string>
+	<string>4.0.3</string>
 	<key>webaddress</key>
 	<string>https://github.com/harrtho/alfred-convert</string>
 </dict>
