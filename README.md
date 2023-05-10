@@ -196,16 +196,16 @@ Thanks, copyright, licensing
 All other code/media are released under the [MIT Licence][mit].
 
 [alfred-pyworkflow]: https://xdevcloud.de/alfred-pyworkflow/
-[alfred]: http://www.alfredapp.com/
+[alfred]: https://www.alfredapp.com/
 [changelog]: ./CHANGELOG.md
 [demo]: https://raw.github.com/harrtho/alfred-convert/master/demo.gif
-[fontawesome]: http://fortawesome.github.io/Font-Awesome/
+[fontawesome]: https://fortawesome.github.io/Font-Awesome/
 [ghissues]: https://github.com/harrtho/alfred-convert/issues
 [ghpulls]: https://github.com/harrtho/alfred-convert/pulls
 [ghreleases]: https://github.com/harrtho/alfred-convert/releases
-[mit]: http://opensource.org/licenses/MIT
-[pintdocs]: http://pint.readthedocs.org/en/latest/index.html
-[pinthowto]: http://pint.readthedocs.org/en/latest/defining.html
+[mit]: https://opensource.org/licenses/MIT
+[pintdocs]: https://pint.readthedocs.org/en/latest/index.html
+[pinthowto]: https://pint.readthedocs.org/en/latest/defining.html
 [pintrepo]: https://github.com/hgrecco/pint
 [pintunits]: https://github.com/hgrecco/pint/blob/master/pint/default_en.txt
 [v1.1]: https://github.com/deanishe/alfred-convert/releases/tag/v1.1
