@@ -1,5 +1,9 @@
 # Alfred-Convert
 
+[![GitHub Version][version-shield]][releases]
+[![GitHub All Releases][downloads-shield]][releases]
+[![GitHub][license-shield]][mit-license]
+
 Convert between different units offline in [Alfred 4 & 5][alfred].
 
 ![][demo]
@@ -193,21 +197,29 @@ Thanks, copyright, licensing
 - Exchange rates are downloaded from [openexchangerates.org][openx] and [CryptoCompare][cryptocompare] (for cryptocurrencies).
 - The [Alfred-PyWorkflow][alfred-pyworkflow] library is used heavily.
 
-All other code/media are released under the [MIT Licence][mit].
+All other code/media are released under the [MIT License][mit-license].
 
 [alfred-pyworkflow]: https://xdevcloud.de/alfred-pyworkflow/
 [alfred]: https://www.alfredapp.com/
 [changelog]: ./CHANGELOG.md
+[config-sheet]: https://www.alfredapp.com/help/workflows/advanced/variables/#environment
+[cryptocompare]: https://www.cryptocompare.com/
 [demo]: https://raw.github.com/harrtho/alfred-convert/master/demo.gif
+[downloads-shield]: https://img.shields.io/github/downloads/harrtho/alfred-convert/total.svg
 [fontawesome]: https://fortawesome.github.io/Font-Awesome/
 [ghissues]: https://github.com/harrtho/alfred-convert/issues
 [ghpulls]: https://github.com/harrtho/alfred-convert/pulls
 [ghreleases]: https://github.com/harrtho/alfred-convert/releases
-[mit]: https://opensource.org/licenses/MIT
+[license-shield]: https://img.shields.io/github/license/harrtho/alfred-convert.svg
+[mit-license]: https://opensource.org/licenses/MIT
+[openx-appid]: https://openexchangerates.org/account/app-ids
+[openx-free]: https://openexchangerates.org/signup/free
+[openx]: https://openexchangerates.org/
 [pintdocs]: https://pint.readthedocs.org/en/latest/index.html
 [pinthowto]: https://pint.readthedocs.org/en/latest/defining.html
 [pintrepo]: https://github.com/hgrecco/pint
 [pintunits]: https://github.com/hgrecco/pint/blob/master/pint/default_en.txt
+[releases]: https://github.com/harrtho/alfred-convert/releases
 [v1.1]: https://github.com/deanishe/alfred-convert/releases/tag/v1.1
 [v1.2]: https://github.com/deanishe/alfred-convert/releases/tag/v1.2
 [v2.0]: https://github.com/deanishe/alfred-convert/releases/tag/v2.0
@@ -219,23 +231,19 @@ All other code/media are released under the [MIT Licence][mit].
 [v2.6]: https://github.com/deanishe/alfred-convert/releases/tag/v2.6
 [v3.0]: https://github.com/deanishe/alfred-convert/releases/tag/v3.0
 [v3.1]: https://github.com/deanishe/alfred-convert/releases/tag/v3.1
-[v3.2]: https://github.com/deanishe/alfred-convert/releases/tag/v3.2
 [v3.2.1]: https://github.com/deanishe/alfred-convert/releases/tag/v3.2.1
 [v3.2.2]: https://github.com/deanishe/alfred-convert/releases/tag/v3.2.2
-[v3.3]: https://github.com/deanishe/alfred-convert/releases/tag/v3.3
+[v3.2]: https://github.com/deanishe/alfred-convert/releases/tag/v3.2
 [v3.3.1]: https://github.com/deanishe/alfred-convert/releases/tag/v3.3.1
+[v3.3]: https://github.com/deanishe/alfred-convert/releases/tag/v3.3
 [v3.4]: https://github.com/deanishe/alfred-convert/releases/tag/v3.4
-[v3.5]: https://github.com/deanishe/alfred-convert/releases/tag/v3.5
 [v3.5.1]: https://github.com/deanishe/alfred-convert/releases/tag/v3.5.1
 [v3.5.2]: https://github.com/deanishe/alfred-convert/releases/tag/v3.5.2
 [v3.5.3]: https://github.com/deanishe/alfred-convert/releases/tag/v3.5.3
+[v3.5]: https://github.com/deanishe/alfred-convert/releases/tag/v3.5
 [v3.6.0]: https://github.com/deanishe/alfred-convert/releases/tag/v3.6.0
 [v3.6.1]: https://github.com/deanishe/alfred-convert/releases/tag/v3.6.1
 [v3.6.2]: https://github.com/deanishe/alfred-convert/releases/tag/v3.6.2
 [v3.7.0]: https://github.com/deanishe/alfred-convert/releases/tag/v3.7.0
 [v4.0.0]: https://github.com/harrtho/alfred-convert/releases/tag/v4.0.0
-[cryptocompare]: https://www.cryptocompare.com/
-[openx]: https://openexchangerates.org/
-[openx-free]: https://openexchangerates.org/signup/free
-[openx-appid]: https://openexchangerates.org/account/app-ids
-[config-sheet]: https://www.alfredapp.com/help/workflows/advanced/variables/#environment
+[version-shield]: https://img.shields.io/github/release/harrtho/alfred-convert.svg
