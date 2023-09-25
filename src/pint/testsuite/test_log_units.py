@@ -3,9 +3,9 @@ import math
 
 import pytest
 
-from pint import OffsetUnitCalculusError, UnitRegistry
+from pint import OffsetUnitCalculusError, Unit, UnitRegistry
+from pint.facets.plain.unit import UnitsContainer
 from pint.testsuite import QuantityTestCase, helpers
-from pint.unit import Unit, UnitsContainer
 
 
 @pytest.fixture(scope="module")
@@ -16,7 +16,6 @@ def module_registry_auto_offset():
 # TODO: do not subclass from QuantityTestCase
 class TestLogarithmicQuantity(QuantityTestCase):
     def test_log_quantity_creation(self, caplog):
-
         # Following Quantity Creation Pattern
         for args in (
             (4.2, "dBm"),
@@ -57,7 +56,7 @@ class TestLogarithmicQuantity(QuantityTestCase):
         # ## Test dB to dB units octave - decade
         # 1 decade = log2(10) octave
         helpers.assert_quantity_almost_equal(
-            self.Q_(1.0, "decade"), self.Q_(math.log(10, 2), "octave")
+            self.Q_(1.0, "decade"), self.Q_(math.log2(10), "octave")
         )
         # ## Test dB to dB units dBm - dBu
         # 0 dBm = 1mW = 1e3 uW = 30 dBu
@@ -74,7 +73,7 @@ class TestLogarithmicQuantity(QuantityTestCase):
         with pytest.raises(OffsetUnitCalculusError):
             (-10.0 * self.ureg.dB) / (1 * self.module_registry.cm)
 
-        # However, if the flag autoconvert_offset_to_baseunit=True is given to UnitRegistry, then pint converts the unit to base.
+        # However, if the flag autoconvert_offset_to_baseunit=True is given to UnitRegistry, then pint converts the unit to plain.
         # With this flag on multiplications and divisions are now possible:
         new_reg = UnitRegistry(autoconvert_offset_to_baseunit=True)
         helpers.assert_quantity_almost_equal(

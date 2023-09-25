@@ -17,8 +17,8 @@ from pint import (
     get_application_registry,
 )
 from pint.compat import np
+from pint.facets.plain.unit import UnitsContainer
 from pint.testsuite import QuantityTestCase, assert_no_warnings, helpers
-from pint.unit import UnitsContainer
 
 
 class FakeWrapper:
@@ -29,7 +29,6 @@ class FakeWrapper:
 
 # TODO: do not subclass from QuantityTestCase
 class TestQuantity(QuantityTestCase):
-
     kwargs = dict(autoconvert_offset_to_baseunit=False)
 
     def test_quantity_creation(self, caplog):
@@ -294,11 +293,13 @@ class TestQuantity(QuantityTestCase):
         x = ureg.Quantity(1e20, "meter")
         assert f"{x:~H}" == r"1×10<sup>20</sup> m"
         assert f"{x:~L}" == r"1\times 10^{20}\ \mathrm{m}"
+        assert f"{x:~Lx}" == r"\SI[]{1e+20}{\meter}"
         assert f"{x:~P}" == r"1×10²⁰ m"
 
         x /= 1e40
         assert f"{x:~H}" == r"1×10<sup>-20</sup> m"
         assert f"{x:~L}" == r"1\times 10^{-20}\ \mathrm{m}"
+        assert f"{x:~Lx}" == r"\SI[]{1e-20}{\meter}"
         assert f"{x:~P}" == r"1×10⁻²⁰ m"
 
     def test_ipython(self):
@@ -368,9 +369,46 @@ class TestQuantity(QuantityTestCase):
             round(abs(self.Q_("2 second").to("millisecond").magnitude - 2000), 7) == 0
         )
 
+    @helpers.requires_mip
+    def test_to_preferred(self):
+        ureg = UnitRegistry()
+        Q_ = ureg.Quantity
+
+        ureg.define("pound_force_per_square_foot = 47.8803 pascals = psf")
+        ureg.define("pound_mass = 0.45359237 kg = lbm")
+
+        preferred_units = [
+            ureg.ft,  # distance      L
+            ureg.slug,  # mass          M
+            ureg.s,  # duration      T
+            ureg.rankine,  # temperature   Θ
+            ureg.lbf,  # force         L M T^-2
+            ureg.psf,  # pressure      M L^−1 T^−2
+            ureg.lbm * ureg.ft**-3,  # density       M L^-3
+            ureg.W,  # power         L^2 M T^-3
+        ]
+
+        temp = (Q_("1 lbf") * Q_("1 m/s")).to_preferred(preferred_units)
+        assert temp.units == ureg.W
+
+        temp = (Q_(" 1 lbf*m")).to_preferred(preferred_units)
+        # would prefer this to be repeatable, but mip doesn't guarantee that currently
+        assert temp.units in (ureg.W * ureg.s, ureg.ft * ureg.lbf)
+
+        temp = Q_("1 kg").to_preferred(preferred_units)
+        assert temp.units == ureg.slug
+
+        result = Q_("1 slug/m**3").to_preferred(preferred_units)
+        assert result.units == ureg.lbm * ureg.ft**-3
+
+        result = Q_("1 amp").to_preferred(preferred_units)
+        assert result.units == ureg.amp
+
+        result = Q_("1 volt").to_preferred(preferred_units)
+        assert result.units == ureg.volts
+
     @helpers.requires_numpy
     def test_convert_numpy(self):
-
         # Conversions with single units take a different codepath than
         # Conversions with more than one unit.
         src_dst1 = UnitsContainer(meter=1), UnitsContainer(inch=1)
@@ -618,7 +656,13 @@ class TestQuantity(QuantityTestCase):
         with pytest.raises(ValueError):
             self.Q_(1, "m").__array__()
 
-    @patch("pint.compat.upcast_types", [FakeWrapper])
+    @patch(
+        "pint.compat.upcast_type_names", ("pint.testsuite.test_quantity.FakeWrapper",)
+    )
+    @patch(
+        "pint.compat.upcast_type_map",
+        {"pint.testsuite.test_quantity.FakeWrapper": FakeWrapper},
+    )
     def test_upcast_type_rejection_on_creation(self):
         with pytest.raises(TypeError):
             self.Q_(FakeWrapper(42), "m")
@@ -998,7 +1042,6 @@ class TestQuantityBasicMath(QuantityTestCase):
         self._test_numeric(np.ones((1, 3)), self._test_inplace)
 
     def test_quantity_abs_round(self):
-
         x = self.Q_(-4.2, "meter")
         y = self.Q_(4.2, "meter")
 
@@ -1007,10 +1050,10 @@ class TestQuantityBasicMath(QuantityTestCase):
             zy = self.Q_(fun(y.magnitude), "meter")
             rx = fun(x)
             ry = fun(y)
-            assert rx == zx, "while testing {0}".format(fun)
-            assert ry == zy, "while testing {0}".format(fun)
-            assert rx is not zx, "while testing {0}".format(fun)
-            assert ry is not zy, "while testing {0}".format(fun)
+            assert rx == zx, f"while testing {fun}"
+            assert ry == zy, f"while testing {fun}"
+            assert rx is not zx, f"while testing {fun}"
+            assert ry is not zy, f"while testing {fun}"
 
     def test_quantity_float_complex(self):
         x = self.Q_(-4.2, None)
@@ -1129,7 +1172,7 @@ class TestDimensions(QuantityTestCase):
         assert get(UnitsContainer({"[time]": 1})) == UnitsContainer({"[time]": 1})
         assert get("seconds") == UnitsContainer({"[time]": 1})
         assert get(UnitsContainer({"seconds": 1})) == UnitsContainer({"[time]": 1})
-        assert get("[speed]") == UnitsContainer({"[length]": 1, "[time]": -1})
+        assert get("[velocity]") == UnitsContainer({"[length]": 1, "[time]": -1})
         assert get("[acceleration]") == UnitsContainer({"[length]": 1, "[time]": -2})
 
     def test_dimensionality(self):
@@ -1150,14 +1193,14 @@ class TestDimensions(QuantityTestCase):
     def test_inclusion(self):
         dim = self.Q_(42, "meter").dimensionality
         assert "[length]" in dim
-        assert not ("[time]" in dim)
+        assert "[time]" not in dim
         dim = (self.Q_(42, "meter") / self.Q_(11, "second")).dimensionality
         assert "[length]" in dim
         assert "[time]" in dim
         dim = self.Q_(20.785, "J/(mol)").dimensionality
         for dimension in ("[length]", "[mass]", "[substance]", "[time]"):
             assert dimension in dim
-        assert not ("[angle]" in dim)
+        assert "[angle]" not in dim
 
 
 class TestQuantityWithDefaultRegistry(TestQuantity):
@@ -1597,7 +1640,7 @@ class TestOffsetUnitMath(QuantityTestCase):
             assert op.mul(in1, in2).units == expected.units
             helpers.assert_quantity_almost_equal(op.mul(in1, in2), expected, atol=0.01)
 
-    divisions_with_scalar = [  # without / with autoconvert to base unit
+    divisions_with_scalar = [  # without / with autoconvert to plain unit
         (((10, "kelvin"), 2), [(5.0, "kelvin"), (5.0, "kelvin")]),
         (((10, "kelvin**2"), 2), [(5.0, "kelvin**2"), (5.0, "kelvin**2")]),
         (((10, "degC"), 2), ["error", "error"]),
@@ -1618,7 +1661,7 @@ class TestOffsetUnitMath(QuantityTestCase):
         else:
             in1, in2 = in1, self.Q_(*in2)
         input_tuple = in1, in2  # update input_tuple for better tracebacks
-        expected_copy = expected[:]
+        expected_copy = expected.copy()
         for i, mode in enumerate([False, True]):
             self.ureg.autoconvert_offset_to_baseunit = mode
             if expected_copy[i] == "error":
@@ -1652,14 +1695,14 @@ class TestOffsetUnitMath(QuantityTestCase):
     def test_exponentiation(self, input_tuple, expected):
         self.ureg.default_as_delta = False
         in1, in2 = input_tuple
-        if type(in1) is tuple and type(in2) is tuple:
+        if type(in1) is type(in2) is tuple:
             in1, in2 = self.Q_(*in1), self.Q_(*in2)
-        elif not type(in1) is tuple and type(in2) is tuple:
+        elif type(in1) is not tuple and type(in2) is tuple:
             in2 = self.Q_(*in2)
         else:
             in1 = self.Q_(*in1)
         input_tuple = in1, in2
-        expected_copy = expected[:]
+        expected_copy = expected.copy()
         for i, mode in enumerate([False, True]):
             self.ureg.autoconvert_offset_to_baseunit = mode
             if expected_copy[i] == "error":
@@ -1690,18 +1733,18 @@ class TestOffsetUnitMath(QuantityTestCase):
     def test_inplace_exponentiation(self, input_tuple, expected):
         self.ureg.default_as_delta = False
         in1, in2 = input_tuple
-        if type(in1) is tuple and type(in2) is tuple:
+        if type(in1) is type(in2) is tuple:
             (q1v, q1u), (q2v, q2u) = in1, in2
             in1 = self.Q_(*(np.array([q1v] * 2, dtype=float), q1u))
             in2 = self.Q_(q2v, q2u)
-        elif not type(in1) is tuple and type(in2) is tuple:
+        elif type(in1) is not tuple and type(in2) is tuple:
             in2 = self.Q_(*in2)
         else:
             in1 = self.Q_(*in1)
 
         input_tuple = in1, in2
 
-        expected_copy = expected[:]
+        expected_copy = expected.copy()
         for i, mode in enumerate([False, True]):
             self.ureg.autoconvert_offset_to_baseunit = mode
             in1_cp = copy.copy(in1)

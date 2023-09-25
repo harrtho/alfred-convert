@@ -7,12 +7,12 @@ from collections import defaultdict
 import pytest
 
 from pint import (
+    Context,
     DefinitionSyntaxError,
     DimensionalityError,
     UndefinedUnitError,
     UnitRegistry,
 )
-from pint.context import Context
 from pint.testsuite import helpers
 from pint.util import UnitsContainer
 
@@ -323,7 +323,6 @@ class TestContexts:
                 q.to("Hz")
 
     def test_context_with_arg(self, func_registry):
-
         ureg = func_registry
 
         add_arg_ctxs(ureg)
@@ -352,7 +351,6 @@ class TestContexts:
                 q.to("Hz")
 
     def test_enable_context_with_arg(self, func_registry):
-
         ureg = func_registry
 
         add_arg_ctxs(ureg)
@@ -386,7 +384,6 @@ class TestContexts:
         ureg.disable_contexts(1)
 
     def test_context_with_arg_def(self, func_registry):
-
         ureg = func_registry
 
         add_argdef_ctxs(ureg)
@@ -427,7 +424,6 @@ class TestContexts:
                 q.to("Hz")
 
     def test_context_with_sharedarg_def(self, func_registry):
-
         ureg = func_registry
 
         add_sharedargdef_ctxs(ureg)
@@ -499,7 +495,6 @@ class TestContexts:
             helpers.assert_quantity_equal(x.to("s"), ureg("1 s"))
 
     def _test_ctx(self, ctx, ureg):
-
         q = 500 * ureg.meter
         s = (ureg.speed_of_light / q).to("Hz")
 
@@ -563,7 +558,6 @@ class TestContexts:
         ],
     )
     def test_parse_simple(self, func_registry, source, name, aliases, defaults):
-
         a = Context.__keytransform__(
             UnitsContainer({"[time]": -1}), UnitsContainer({"[length]": 1})
         )
@@ -579,7 +573,6 @@ class TestContexts:
         self._test_ctx(c, func_registry)
 
     def test_parse_auto_inverse(self, func_registry):
-
         a = Context.__keytransform__(
             UnitsContainer({"[time]": -1.0}), UnitsContainer({"[length]": 1.0})
         )
@@ -638,7 +631,6 @@ class TestContexts:
             Context.from_lines(s)
 
     def test_warnings(self, caplog, func_registry):
-
         ureg = func_registry
 
         with caplog.at_level(logging.DEBUG, "pint"):
@@ -691,7 +683,7 @@ class TestDefinedContexts:
                     )
                     p = find_shortest_path(ureg._active_ctx.graph, da, db)
                     assert p
-                    msg = "{} <-> {}".format(a, b)
+                    msg = f"{a} <-> {b}"
                     # assertAlmostEqualRelError converts second to first
                     helpers.assert_quantity_almost_equal(b, a, rtol=0.01, msg=msg)
 
@@ -713,7 +705,7 @@ class TestDefinedContexts:
             da, db = Context.__keytransform__(a.dimensionality, b.dimensionality)
             p = find_shortest_path(ureg._active_ctx.graph, da, db)
             assert p
-            msg = "{} <-> {}".format(a, b)
+            msg = f"{a} <-> {b}"
             helpers.assert_quantity_almost_equal(b, a, rtol=0.01, msg=msg)
 
             # Check RKM <-> cN/tex conversion
@@ -780,9 +772,10 @@ def test_redefine(subtests):
         asd = 4 baz
 
         @context c
-            # Note how we're redefining a symbol, not the base name, as a
+            # Note how we're redefining a symbol, not the plain name, as a
             # function of another name
             b = 5 f
+        @end
         """.splitlines()
     )
     # Units that are somehow directly or indirectly defined as a function of the
@@ -927,13 +920,13 @@ def test_err_change_base_unit():
         """.splitlines()
     )
 
-    expected = "Can't redefine a base unit to a derived one"
+    expected = "Can't redefine a plain unit to a derived one"
     with pytest.raises(ValueError, match=expected):
         ureg.enable_contexts("c")
 
 
 def test_err_to_base_unit():
-    expected = "Can't define base units within a context"
+    expected = ".*can't define plain units within a context"
     with pytest.raises(DefinitionSyntaxError, match=expected):
         Context.from_lines(["@context c", "x = [d]"])
 
@@ -971,7 +964,7 @@ def test_err_cyclic_dependency():
         """.splitlines()
     )
     # TODO align this exception and the one you get when you implement a cyclic
-    #      dependency within the base registry. Ideally this exception should be
+    #      dependency within the plain registry. Ideally this exception should be
     #      raised by enable_contexts.
     ureg.enable_contexts("c")
     q = ureg.Quantity("bar")
@@ -980,19 +973,17 @@ def test_err_cyclic_dependency():
 
 
 def test_err_dimension_redefinition():
-    expected = re.escape("Expected <unit> = <converter>; got [d1] = [d2] * [d3]")
-    with pytest.raises(DefinitionSyntaxError, match=expected):
+    with pytest.raises(DefinitionSyntaxError):
         Context.from_lines(["@context c", "[d1] = [d2] * [d3]"])
 
 
 def test_err_prefix_redefinition():
-    expected = re.escape("Expected <unit> = <converter>; got [d1] = [d2] * [d3]")
-    with pytest.raises(DefinitionSyntaxError, match=expected):
+    with pytest.raises(DefinitionSyntaxError):
         Context.from_lines(["@context c", "[d1] = [d2] * [d3]"])
 
 
 def test_err_redefine_alias(subtests):
-    expected = "Can't change a unit's symbol or aliases within a context"
+    expected = ".*can't change a unit's symbol or aliases within a context"
     for s in ("foo = bar = f", "foo = bar = _ = baz"):
         with subtests.test(s):
             with pytest.raises(DefinitionSyntaxError, match=expected):

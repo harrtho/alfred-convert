@@ -1,11 +1,12 @@
+from contextlib import ExitStack
 from unittest.mock import patch
 
 import pytest
 
-import pint.numpy_func
+import pint.facets.numpy.numpy_func
 from pint import DimensionalityError, OffsetUnitCalculusError
 from pint.compat import np
-from pint.numpy_func import (
+from pint.facets.numpy.numpy_func import (
     _is_quantity,
     _is_sequence_with_quantity_elements,
     convert_to_consistent_units,
@@ -19,22 +20,22 @@ from pint.testsuite.test_numpy import TestNumpyMethods
 
 
 class TestNumPyFuncUtils(TestNumpyMethods):
-    @patch("pint.numpy_func.HANDLED_FUNCTIONS", {})
-    @patch("pint.numpy_func.HANDLED_UFUNCS", {})
+    @patch("pint.facets.numpy.numpy_func.HANDLED_FUNCTIONS", {})
+    @patch("pint.facets.numpy.numpy_func.HANDLED_UFUNCS", {})
     def test_implements(self):
         # Test for functions
         @implements("test", "function")
         def test_function():
             pass
 
-        assert pint.numpy_func.HANDLED_FUNCTIONS["test"] == test_function
+        assert pint.facets.numpy.numpy_func.HANDLED_FUNCTIONS["test"] == test_function
 
         # Test for ufuncs
         @implements("test", "ufunc")
         def test_ufunc():
             pass
 
-        assert pint.numpy_func.HANDLED_UFUNCS["test"] == test_ufunc
+        assert pint.facets.numpy.numpy_func.HANDLED_UFUNCS["test"] == test_ufunc
 
         # Test for invalid func type
         with pytest.raises(ValueError):
@@ -191,3 +192,66 @@ class TestNumPyFuncUtils(TestNumpyMethods):
             numpy_wrap("invalid", np.ones, [], {}, [])
         # TODO (#905 follow-up): test that NotImplemented is returned when upcast types
         # present
+
+    def test_trapz(self):
+        with ExitStack() as stack:
+            stack.callback(
+                setattr,
+                self.ureg,
+                "autoconvert_offset_to_baseunit",
+                self.ureg.autoconvert_offset_to_baseunit,
+            )
+            self.ureg.autoconvert_offset_to_baseunit = True
+            t = self.Q_(np.array([0.0, 4.0, 8.0]), "degC")
+            z = self.Q_(np.array([0.0, 2.0, 4.0]), "m")
+            helpers.assert_quantity_equal(
+                np.trapz(t, x=z), self.Q_(1108.6, "kelvin meter")
+            )
+
+    def test_trapz_no_autoconvert(self):
+        t = self.Q_(np.array([0.0, 4.0, 8.0]), "degC")
+        z = self.Q_(np.array([0.0, 2.0, 4.0]), "m")
+        with pytest.raises(OffsetUnitCalculusError):
+            np.trapz(t, x=z)
+
+    def test_dot(self):
+        with ExitStack() as stack:
+            stack.callback(
+                setattr,
+                self.ureg,
+                "autoconvert_offset_to_baseunit",
+                self.ureg.autoconvert_offset_to_baseunit,
+            )
+            self.ureg.autoconvert_offset_to_baseunit = True
+            t = self.Q_(np.array([0.0, 5.0, 10.0]), "degC")
+            z = self.Q_(np.array([1.0, 2.0, 3.0]), "m")
+            helpers.assert_quantity_almost_equal(
+                np.dot(t, z), self.Q_(1678.9, "kelvin meter")
+            )
+
+    def test_dot_no_autoconvert(self):
+        t = self.Q_(np.array([0.0, 5.0, 10.0]), "degC")
+        z = self.Q_(np.array([1.0, 2.0, 3.0]), "m")
+        with pytest.raises(OffsetUnitCalculusError):
+            np.dot(t, z)
+
+    def test_cross(self):
+        with ExitStack() as stack:
+            stack.callback(
+                setattr,
+                self.ureg,
+                "autoconvert_offset_to_baseunit",
+                self.ureg.autoconvert_offset_to_baseunit,
+            )
+            self.ureg.autoconvert_offset_to_baseunit = True
+            t = self.Q_(np.array([0.0, 5.0, 10.0]), "degC")
+            z = self.Q_(np.array([1.0, 2.0, 3.0]), "m")
+            helpers.assert_quantity_almost_equal(
+                np.cross(t, z), self.Q_([268.15, -536.3, 268.15], "kelvin meter")
+            )
+
+    def test_cross_no_autoconvert(self):
+        t = self.Q_(np.array([0.0, 5.0, 10.0]), "degC")
+        z = self.Q_(np.array([1.0, 2.0, 3.0]), "m")
+        with pytest.raises(OffsetUnitCalculusError):
+            np.cross(t, z)

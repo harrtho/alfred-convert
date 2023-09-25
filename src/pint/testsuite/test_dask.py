@@ -1,5 +1,6 @@
 import importlib
-import os
+
+import pathlib
 
 import pytest
 
@@ -10,9 +11,15 @@ np = pytest.importorskip("numpy", reason="NumPy is not available")
 dask = pytest.importorskip("dask", reason="Dask is not available")
 distributed = pytest.importorskip("distributed", reason="Distributed is not available")
 
-from dask.distributed import Client  # isort:skip
-from distributed.client import futures_of  # isort:skip
-from distributed.utils_test import cluster, gen_cluster, loop  # isort:skip
+from dask.distributed import Client
+from distributed.client import futures_of
+from distributed.utils_test import (  # noqa: F401
+    cleanup,
+    cluster,
+    gen_cluster,
+    loop,
+    loop_in_thread,
+)
 
 loop = loop  # flake8
 
@@ -129,8 +136,8 @@ def test_visualize(local_registry, dask_array):
 
     assert res is None
     # These commands only work on Unix and Windows
-    assert os.path.exists("mydask.png")
-    os.remove("mydask.png")
+    assert pathlib.Path("mydask.png").exists()
+    pathlib.Path("mydask.png").unlink()
 
 
 def test_compute_persist_equivalent(local_registry, dask_array, numpy_array):
@@ -143,6 +150,8 @@ def test_compute_persist_equivalent(local_registry, dask_array, numpy_array):
 
     assert np.all(res_compute == res_persist)
     assert res_compute.units == res_persist.units == units_
+    assert type(res_compute) == local_registry.Quantity
+    assert type(res_persist) == local_registry.Quantity
 
 
 @pytest.mark.parametrize("method", ["compute", "persist", "visualize"])

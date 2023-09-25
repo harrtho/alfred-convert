@@ -1,4 +1,5 @@
 import copy
+import decimal
 import math
 import pprint
 
@@ -6,14 +7,14 @@ import pytest
 
 from pint import Context, DimensionalityError, UnitRegistry, get_application_registry
 from pint.compat import np
+from pint.facets.plain.unit import UnitsContainer
+from pint.testing import assert_equal
 from pint.testsuite import QuantityTestCase, helpers
-from pint.unit import UnitsContainer
 from pint.util import ParserHelper
 
 
 # TODO: do not subclass from QuantityTestCase
 class TestIssues(QuantityTestCase):
-
     kwargs = dict(autoconvert_offset_to_baseunit=False)
 
     @pytest.mark.xfail
@@ -248,7 +249,6 @@ class TestIssues(QuantityTestCase):
         assert dis.value == acc.value * tim.value**2 / 2
 
     def test_issue85(self, module_registry):
-
         T = 4.0 * module_registry.kelvin
         m = 1.0 * module_registry.amu
         va = 2.0 * module_registry.k * T / m
@@ -261,7 +261,6 @@ class TestIssues(QuantityTestCase):
         helpers.assert_quantity_almost_equal(va.to_base_units(), vb.to_base_units())
 
     def test_issue86(self, module_registry):
-
         module_registry.autoconvert_offset_to_baseunit = True
 
         def parts(q):
@@ -333,7 +332,6 @@ class TestIssues(QuantityTestCase):
         helpers.assert_quantity_almost_equal(z, 5.1 * module_registry.meter)
 
     def test_issue104(self, module_registry):
-
         x = [
             module_registry("1 meter"),
             module_registry("1 meter"),
@@ -360,7 +358,6 @@ class TestIssues(QuantityTestCase):
         helpers.assert_quantity_almost_equal(y[0], module_registry.Quantity(1, "meter"))
 
     def test_issue105(self, module_registry):
-
         func = module_registry.parse_unit_name
         val = list(func("meter"))
         assert list(func("METER")) == []
@@ -395,7 +392,10 @@ class TestIssues(QuantityTestCase):
     def test_alternative_angstrom_definition(self, module_registry):
         module_registry.Quantity(2, "\u212B")
 
-    def test_micro_creation(self, module_registry):
+    def test_micro_creation_U03bc(self, module_registry):
+        module_registry.Quantity(2, "μm")
+
+    def test_micro_creation_U00b5(self, module_registry):
         module_registry.Quantity(2, "µm")
 
     @helpers.requires_numpy
@@ -445,10 +445,10 @@ class TestIssues(QuantityTestCase):
 
     def test_issue354_356_370(self, module_registry):
         assert (
-            "{:~}".format(1 * module_registry.second / module_registry.millisecond)
+            f"{1 * module_registry.second / module_registry.millisecond:~}"
             == "1.0 s / ms"
         )
-        assert "{:~}".format(1 * module_registry.count) == "1 count"
+        assert f"{1 * module_registry.count:~}" == "1 count"
         assert "{:~}".format(1 * module_registry("MiB")) == "1 MiB"
 
     def test_issue468(self, module_registry):
@@ -469,7 +469,6 @@ class TestIssues(QuantityTestCase):
 
     @helpers.requires_numpy
     def test_issue483(self, module_registry):
-
         a = np.asarray([1, 2, 3])
         q = [1, 2, 3] * module_registry.dimensionless
         p = (q**q).m
@@ -720,7 +719,7 @@ class TestIssues(QuantityTestCase):
 
     def test_issue1058(self, module_registry):
         """verify that auto-reducing quantities with three or more units
-        of same base type succeeds"""
+        of same plain type succeeds"""
         q = 1 * module_registry.mg / module_registry.g / module_registry.kg
         q.ito_reduced_units()
         assert isinstance(q, module_registry.Quantity)
@@ -852,6 +851,29 @@ class TestIssues(QuantityTestCase):
             np.array((0.04, 0.09)),
         )
 
+    def test_issue1277(self, module_registry):
+        ureg = module_registry
+        assert ureg("%") == ureg("percent")
+        assert ureg("%") == ureg.percent
+        assert ureg("ppm") == ureg.ppm
+
+        a = ureg.Quantity("10 %")
+        b = ureg.Quantity("100 ppm")
+        c = ureg.Quantity("0.5")
+
+        assert f"{a}" == "10 percent"
+        assert f"{a:~}" == "10 %"
+        assert f"{b}" == "100 ppm"
+        assert f"{b:~}" == "100 ppm"
+
+        assert_equal(a, 0.1)
+        assert_equal(1000 * b, a)
+        assert_equal(c, 5 * a)
+
+        assert_equal((1 * ureg.meter) / (1 * ureg.kilometer), 0.1 * ureg.percent)
+        assert c.to("percent").m == 50
+        # assert c.to("%").m == 50  # TODO: fails.
+
     @helpers.requires_uncertainties()
     def test_issue_1300(self):
         module_registry = UnitRegistry()
@@ -909,7 +931,7 @@ def test_issue1498(tmp_path):
     def1 = tmp_path / "def1.txt"
     def2 = tmp_path / "def2.txt"
 
-    # A file that defines a new base unit and uses it in a context
+    # A file that defines a new plain unit and uses it in a context
     def0.write_text(
         """
     foo = [FOO]
@@ -920,12 +942,12 @@ def test_issue1498(tmp_path):
     """
     )
 
-    # A file that defines a new base unit, then imports another file…
+    # A file that defines a new plain unit, then imports another file…
     def1.write_text(
         f"""
     foo = [FOO]
 
-    @import {str(def2)}
+    @import {def2.name}
     """
     )
 
@@ -938,9 +960,8 @@ def test_issue1498(tmp_path):
     """
     )
 
-    # Succeeds with pint 0.18; fails with pint 0.19
     ureg1 = UnitRegistry()
-    ureg1.load_definitions(def1)  # ← FAILS
+    ureg1.load_definitions(def1)
 
     assert 12.0 == ureg1("1.2 foo").to("kg", "BAR").magnitude
 
@@ -953,7 +974,7 @@ def test_issue1498b(tmp_path):
     def1_2 = tmp_path / "dir_a" / "def1_2.txt"
     def2 = tmp_path / "def2.txt"
 
-    # A file that defines a new base unit and uses it in a context
+    # A file that defines a new plain unit and uses it in a context
     def0.write_text(
         """
     foo = [FOO]
@@ -967,7 +988,7 @@ def test_issue1498b(tmp_path):
     """
     )
 
-    # A file that defines a new base unit, then imports another file…
+    # A file that defines a new plain unit, then imports another file…
     def1.parent.mkdir()
     def1.write_text(
         """
@@ -1006,3 +1027,66 @@ def test_issue1498b(tmp_path):
     ureg1.load_definitions(def0)  # ← FAILS
 
     assert 12.0 == ureg1("1.2 foo").to("kg", "BAR").magnitude
+
+
+def test_backcompat_speed_velocity(func_registry):
+    get = func_registry.get_dimensionality
+    assert get("[velocity]") == UnitsContainer({"[length]": 1, "[time]": -1})
+    assert get("[speed]") == UnitsContainer({"[length]": 1, "[time]": -1})
+
+
+def test_issue1433(func_registry):
+    assert func_registry.Quantity("1 micron") == func_registry.Quantity("1 micrometer")
+
+
+def test_issue1527():
+    ureg = UnitRegistry(non_int_type=decimal.Decimal)
+    x = ureg.parse_expression("2 microliter milligram/liter")
+    assert x.magnitude.as_tuple()[1] == (2,)
+    assert x.to_compact().as_tuple()[1] == (2,)
+    assert x.to_base_units().as_tuple()[1] == (2,)
+    assert x.to("ng").as_tuple()[1] == (2,)
+
+
+def test_issue1621():
+    ureg = UnitRegistry(non_int_type=decimal.Decimal)
+    digits = ureg.Quantity("5.0 mV/m").to_base_units().magnitude.as_tuple()[1]
+    assert digits == (5, 0)
+
+
+def test_issue1631():
+    import pint
+
+    # Test registry subclassing
+    class MyRegistry(pint.UnitRegistry):
+        pass
+
+    assert MyRegistry.Quantity is pint.UnitRegistry.Quantity
+    assert MyRegistry.Unit is pint.UnitRegistry.Unit
+
+    ureg = MyRegistry()
+
+    u = ureg.meter
+    assert isinstance(u, ureg.Unit)
+    assert isinstance(u, pint.Unit)
+
+    q = 2 * ureg.meter
+    assert isinstance(q, ureg.Quantity)
+    assert isinstance(q, pint.Quantity)
+
+
+def test_issue1725(registry_empty):
+    registry_empty.define("dollar = [currency]")
+    assert registry_empty.get_compatible_units("dollar") == set()
+
+
+def test_issues_1505():
+    ur = UnitRegistry(non_int_type=decimal.Decimal)
+
+    assert isinstance(ur.Quantity("1m/s").magnitude, decimal.Decimal)
+    assert not isinstance(
+        ur.Quantity("m/s").magnitude, float
+    )  # unexpected success (magnitude should not be a float)
+    assert isinstance(
+        ur.Quantity("m/s").magnitude, decimal.Decimal
+    )  # unexpected fail (magnitude should be a decimal)
