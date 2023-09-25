@@ -150,22 +150,21 @@ Convert Alfred Workflow is licensed under the [MIT License][license-mit]
 
 The workflow uses the following libraries:
 
-- [Pint][pintrepo] ([BSD License][license-bsd])
+- [Pint][pintrepo] ([BSD License][license-pint])
 - [Alfred-PyWorkflow][alfred-pyworkflow] ([MIT License][license-mit])
-- [docopt][docopt] ([MIT License][license-mit])
+- [docopt][docopt] ([MIT License][license-docopt])
 
 The workflow uses following icons:
 
 - The workflow icons are from [Font Awesome][fontawesome]
 
-
 Exchange rates are downloaded from [openexchangerates.org][openx] and [CryptoCompare][cryptocompare]
 (for cryptocurrencies).
 
 [abandoned-workflow]: https://github.com/deanishe/alfred-convert
+[alfred-config-sheet]: https://www.alfredapp.com/help/workflows/advanced/variables/#environment
 [alfred-pyworkflow]: https://xdevcloud.de/alfred-pyworkflow/
 [alfred]: https://www.alfredapp.com/
-[alfred-config-sheet]: https://www.alfredapp.com/help/workflows/advanced/variables/#environment
 [cryptocompare]: https://www.cryptocompare.com/
 [deanishe]: https://github.com/deanishe
 [docopt]: https://github.com/docopt/docopt
@@ -174,16 +173,17 @@ Exchange rates are downloaded from [openexchangerates.org][openx] and [CryptoCom
 [gh-latest-release]: https://github.com/harrtho/alfred-convert/releases/latest
 [gh-pulls]: https://github.com/harrtho/alfred-convert/pulls
 [gh-releases]: https://github.com/harrtho/alfred-convert/releases
-[license-bsd]: https://github.com/hgrecco/pint/blob/master/LICENSE
+[license-docopt]: https://github.com/docopt/docopt/blob/master/LICENSE-MIT
 [license-mit]: https://opensource.org/licenses/MIT
+[license-pint]: https://github.com/hgrecco/pint/blob/master/LICENSE
 [openx-appid]: https://openexchangerates.org/account/app-ids
 [openx-free]: https://openexchangerates.org/signup/free
 [openx]: https://openexchangerates.org/
+[pintcontext]: https://pint.readthedocs.io/en/latest/user/contexts.html
 [pintdocs]: https://pint.readthedocs.io/en/latest/index.html
 [pinthowto]: https://pint.readthedocs.io/en/latest/user/formatting.html
 [pintrepo]: https://github.com/hgrecco/pint
 [pintunits]: https://github.com/hgrecco/pint/blob/master/pint/default_en.txt
-[pintcontext]: https://pint.readthedocs.io/en/latest/user/contexts.html
 [preview]: img/preview.png
 [shield-downloads]: https://img.shields.io/github/downloads/harrtho/alfred-convert/total.svg
 [shield-license]: https://img.shields.io/github/license/harrtho/alfred-convert.svg
