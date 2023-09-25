@@ -1,75 +1,52 @@
-# Alfred-Convert
+# Convert Alfred Workflow
 
-[![GitHub Version][version-shield]][releases]
-[![GitHub All Releases][downloads-shield]][releases]
-[![GitHub][license-shield]][mit-license]
+[![GitHub Version][shield-version]][gh-releases]
+[![GitHub All Releases][shield-downloads]][gh-releases]
+[![GitHub][shield-license]][license-mit]
 
-Convert between different units offline in [Alfred 4 & 5][alfred].
-
-![][demo]
-
-Alfred-Convert uses a [built-in library][pintdocs] for lightning-fast conversions.
-
-You can also add your own custom units.
+Convert between different units offline in [Alfred][alfred].
 
 **Note:** Currency conversions do require occasional Internet connectivity to update exchange rates. Alfred-Convert will otherwise work just fine without an Internet connection.
 
-<!-- MarkdownTOC autolink="true" bracket="round" depth="2" autoanchor="true" -->
+![][preview]
 
-- [Downloading](#downloading)
-- [Usage](#usage)
-  - [Conversions](#conversions)
-  - [Configuration](#configuration)
-    - [Configuration sheet](#configuration-sheet)
-    - [Active currencies](#active-currencies)
-    - [Custom units](#custom-units)
-- [Supported units](#supported-units)
-  - [Supported currencies](#supported-currencies)
-  - [Adding custom units](#adding-custom-units)
-- [Releases](#releases)
-- [Thanks, copyright, licensing](#thanks-copyright-licensing)
+## Download & Installation
 
-<!-- /MarkdownTOC -->
+Download the [latest workflow release][gh-latest-release] from GitHub. Open the workflow file to
+install in Alfred.
 
-<a name="downloading"></a>
-Downloading
-
----
-
-Download from [GitHub releases][ghreleases].
-
-**Note**: Version 4.0 and above only supports Alfred 4+ and Python 3.7+. If you're still using Alfred 3, please download [v3.6.2][v3.6.2].
-
-<a name="usage"></a>
-Usage
-
----
+## Usage
 
 - `conv <quantity> <from unit> [<to unit>]` — Perform a conversion
   - `↩` — Copy result without thousands separator to pasteboard
-  - `⌘C` — Copy result with thousands separator to pasteboard
-  - `⌘↩` — Add/remove destination unit as default for this dimensionality
-  - `⌘L` — Show result in Alfred's Large Type window
-- `convinfo` — View help file and information about the workflow, or edit custom units and active currencies
+  - `⌘ + C` — Copy result with thousands separator to pasteboard
+  - `⌘ + ↩` — Add/remove destination unit as default for this dimensionality
+  - `⌘ + L` — Show result in Alfred's Large Type window
+- `convinfo` — View help file and information about the workflow, or edit custom units and active 
+    currencies
   - `View Help File` — Open this page in your browser
   - `View All Supported Currencies` — View/filter the list of all supported currencies in Alfred
   - `Edit Active Currencies` — Edit the list of active currencies in your default text editor
   - `Edit Custom Units` — Edit the list of custom currencies in your default text editor
 
-<a name="conversions"></a>
-
 ### Conversions
 
-**NOTE**: Only a limited number of fiat currencies are supported by default. Additional rates are only supported if you set a key for the [openexchangerates.org][openx] API in the workflow's [configuration sheet](#configuration). You can sign up for a free account [here][openx-free]. When you're signed up, copy the **App ID** from the email you receive or [this page][openx-appid] into the `APP_KEY` field in the [configuration sheet](#configuration).
+**NOTE**: Only a limited number of fiat currencies are supported by default. Additional rates are
+only supported if you set a key for the [openexchangerates.org][openx] API in the workflow's
+[configuration sheet](#configuration). You can sign up for a free account [here][openx-free].
+When you're signed up, copy the **App ID** from the email you receive or [this page][openx-appid]
+into the `APP_KEY` field in the [configuration sheet](#configuration).
 
 - `conv [<context>] <quantity> <from unit> [<to unit>]` — Perform a conversion
-  - `↩` or `⌘C` — Copy the result to the pasteboard
-  - `⌘↩` — Add/remove destination unit as default for this dimensionality
-  - `⌘L` — Show result in Alfred's Large Type window
+  - `↩` or `⌘ + C` — Copy the result to the pasteboard
+  - `⌘ + ↩` — Add/remove destination unit as default for this dimensionality
+  - `⌘ + L` — Show result in Alfred's Large Type window
 
-If no destination unit is specified, any defaults you've saved will be used (that aren't the same as the source unit).
+If no destination unit is specified, any defaults you've saved will be used (that aren't the same as
+the source unit).
 
-The syntax is simple: an optional context, the quantity, the unit you want to convert from then (optionally) the unit you want to convert to. For example:
+The syntax is simple: an optional context, the quantity, the unit you want to convert from then
+(optionally) the unit you want to convert to. For example:
 
 - `conv 128 mph kph`
 - `conv 72in cm`
@@ -77,23 +54,25 @@ The syntax is simple: an optional context, the quantity, the unit you want to co
 - `conv 20.5 m/s mph`
 - `conv 100 eur gbp`
 
-Or with a context:
+Or with a [Context][pintcontext]:
 
 - `conv spectroscopy 1Å eV` (or `conv sp 1Å eV`)
 
-It doesn't matter if there is a space between the quantity and the units or not. Alfred-Convert will tell you if it doesn't understand your query or know the units.
+It doesn't matter if there is a space between the quantity and the units or not. Alfred-Convert will
+tell you if it doesn't understand your query or know the units.
 
-Actioning an item (selecting it and hitting `↩`) will copy it to the clipboard. Using `⌘+L` will display the result in Alfred's large text window, `⌘+C` will copy the selected result to the clipboard.
+Actioning an item (selecting it and hitting `↩`) will copy it to the clipboard. Using `⌘ + L` will
+display the result in Alfred's large text window, `⌘ + C` will copy the selected result to the
+clipboard.
 
-<a name="configuration"></a>
+## Configuration
 
-### Configuration
+The workflow is configured via the [Workflow Environment Variables][alfred-config-sheet]
+(the `[𝒙]` icon) in Alfred Preferences and via a couple of text files in its data directory.
 
-The workflow is configured via the [configuration sheet][config-sheet] (the `[𝒙]` icon) in Alfred Preferences and via a couple of text files in its data directory.
+### Configuration Sheet
 
-#### Configuration sheet
-
-Basic configuration is performed in the [configuration sheet][config-sheet]:
+Basic configuration is performed in the [Workflow Environment Variables][alfred-config-sheet]:
 
 | Option                    | Meaning                                                                                                                                       |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -106,144 +85,106 @@ Basic configuration is performed in the [configuration sheet][config-sheet]:
 | `THOUSANDS_SEPARATOR`     | Character to delimit thousands Used for parsing input and generating output.                                                                  |
 | `UPDATE_INTERVAL`         | How often (in minutes) to update currency exchange rates.                                                                                     |
 
-#### Active currencies
+### Active Currencies
 
-By default, all supported fiat currencies (provided you've set `APP_KEY` in the [configuration sheet](#configuration)) and a handful of the most popular cryptocurrencies are active.
+By default, all supported fiat currencies (provided you've set `APP_KEY` in the
+[configuration sheet](#configuration)) and a handful of the most popular cryptocurrencies are
+active.
 
 - `convinfo`
   - `View All Supported Currencies`
   - `Edit Active Currencies`
 
-Use `Edit Active Currencies` to open the list of active currencies in your default editor. Add the symbol for the currency you'd like to activate on a new line in this file.
+Use `Edit Active Currencies` to open the list of active currencies in your default editor. Add the
+symbol for the currency you'd like to activate on a new line in this file.
 
-You can use `View All Supported Currencies` to search for the currency you'd like to activate, then use `⌘C` on the result to copy the symbol to the pasteboard.
+You can use `View All Supported Currencies` to search for the currency you'd like to activate, then
+use `⌘ + C` on the result to copy the symbol to the pasteboard.
 
-#### Custom units
+### Custom Units
 
-See [Adding custom units](#adding-custom-units).
+See [Adding Custom Units](#adding-custom-units).
 
-<a name="supported-units"></a>
-Supported units
+### Supported Units
 
----
+Currently, Alfred-Convert only supports [the units][pintunits] understood by the underlying
+[Pint][pintdocs] library plus [currencies](#supported-currencies) and a handful of additional units.
 
-Currently, Alfred-Convert only supports [the units][pintunits] understood by the underlying [Pint][pintdocs] library plus [currencies](#supported-currencies) and a handful of additional units.
+You can [add your own custom units](#adding-custom-units) to the workflow. If you think they'd be
+useful to everyone, please create a corresponding [GitHub issue][gh-issues] to request addition as a
+default unit or submit a [pull request][gh-pulls].
 
-You can [add your own custom units](#adding-custom-units) to the workflow. If you think they'd be useful to everyone, please create a corresponding [GitHub issue][ghissues] to request addition as a default unit or submit a [pull request][ghpulls].
+### Supported Currencies
 
-<a name="supported-currencies"></a>
+To convert, use the appropriate **abbreviation** for the relevant currencies, e.g.
+`conv 100 eur gbp`.
 
-### Supported currencies
+You can also view (and search) the list from within Alfred by using the keyword `convinfo` and
+choosing `View All Supported Currencies`.
 
-To convert, use the appropriate **abbreviation** for the relevant currencies, e.g. `conv 100 eur gbp`.
+See [All supported currencies](./docs/currencies.md).
 
-You can also view (and search) the list from within Alfred by using the keyword `convinfo` and choosing `View All Supported Currencies`.
+### Adding Custom Units
 
-[All supported currencies](./docs/currencies.md).
+You can add your own custom units using the [format defined by Pint][pinthowto]. Add your
+definitions to the `unit_definitions.txt` file in the workflow's data directory.
 
-<a name="adding-custom-units"></a>
+To edit this file, enter `convinfo` in Alfred and select `Edit Custom Units`. The
+`unit_definitions.txt` file will open in your default text editor.
 
-### Adding custom units
+Please see the [Pint documentation][pinthowto] for the required format. See Pint's
+[default unit definitions][pintunits] for examples.
 
-You can add your own custom units using the [format defined by Pint][pinthowto]. Add your definitions to the `unit_definitions.txt` file in the workflow's data directory.
+## Bug Reports and Feature Requests
 
-To edit this file, enter `convinfo` in Alfred and select `Edit Custom Units`. The `unit_definitions.txt` file will open in your default text editor.
+Please use [GitHub issues][gh-issues] to report bugs or request features.
 
-Please see the [Pint documentation][pinthowto] for the required format. See Pint's [default unit definitions][pintunits] for examples.
+## Contributors
 
-<a name="releases"></a>
-Releases
+This Alfred Workflow comes from the [abandoned Workflow][abandoned-workflow] of
+[Dean Jackson][deanishe]
 
----
+## License
 
-See [CHANGELOG][changelog] for more information.
+Convert Alfred Workflow is licensed under the [MIT License][license-mit]
 
-| Release         | Date           |
-| --------------- | -------------- |
-| [4.0.0][v4.0.0] | 2022-12-21     |
-| [3.7.0][v3.7.0] | 2020-02-20     |
-| [3.6.2][v3.6.2] | 2019-09-06     |
-| [3.6.1][v3.6.1] | 2019-05-30     |
-| [3.6.0][v3.6.0] | 2019-05-06     |
-| [3.5.3][v3.5.3] | 2019-01-26     |
-| [3.5.2][v3.5.2] | 2019-01-26     |
-| [3.5.1][v3.5.1] | 2018-01-13     |
-| [3.5][v3.5]     | 2018-01-12     |
-| [3.4][v3.4]     | 2017-12-26     |
-| [3.3.1][v3.3.1] | 2017-11-21     |
-| [3.3][v3.3]     | 2017-11-20     |
-| [3.2.2][v3.2.2] | 2017-11-07     |
-| [3.2.1][v3.2.1] | 2017-11-04     |
-| [3.2][v3.2]     | 2017-11-02     |
-| [3.1][v3.1]     | 2017-11-02     |
-| [3.0][v3.0]     | 2017-07-16     |
-| [2.6][v2.6]     | 2017-06-15     |
-| [2.5][v2.5]     | 2015-12-11     |
-| [2.4][v2.4]     | 2015-11-28     |
-| [2.3][v2.3]     | 2015-11-26     |
-| [2.2][v2.2]     | 2015-07-16     |
-| 2.1             | Never released |
-| [2.0][v2.0]     | 2014-12-26     |
-| [1.2][v1.2]     | 2014-08-19     |
-| [1.1][v1.1]     | 2014-08-09     |
+The workflow uses the following libraries:
 
-<a name="thanks-copyright-licensing"></a>
-Thanks, copyright, licensing
+- [Pint][pintrepo] ([BSD License][license-bsd])
+- [Alfred-PyWorkflow][alfred-pyworkflow] ([MIT License][license-mit])
+- [docopt][docopt] ([MIT License][license-mit])
 
----
+The workflow uses following icons:
 
-- The Python [Pint][pintdocs] library does all the heavy lifting. See the [Pint GitHub repo][pintrepo] for Pint licensing or `LICENSE.txt` and `AUTHORS.txt` in the `pint` subdirectory.
 - The workflow icons are from [Font Awesome][fontawesome]
-- Exchange rates are downloaded from [openexchangerates.org][openx] and [CryptoCompare][cryptocompare] (for cryptocurrencies).
-- The [Alfred-PyWorkflow][alfred-pyworkflow] library is used heavily.
 
-All other code/media are released under the [MIT License][mit-license].
 
+Exchange rates are downloaded from [openexchangerates.org][openx] and [CryptoCompare][cryptocompare]
+(for cryptocurrencies).
+
+[abandoned-workflow]: https://github.com/deanishe/alfred-convert
 [alfred-pyworkflow]: https://xdevcloud.de/alfred-pyworkflow/
 [alfred]: https://www.alfredapp.com/
-[changelog]: ./CHANGELOG.md
-[config-sheet]: https://www.alfredapp.com/help/workflows/advanced/variables/#environment
+[alfred-config-sheet]: https://www.alfredapp.com/help/workflows/advanced/variables/#environment
 [cryptocompare]: https://www.cryptocompare.com/
-[demo]: https://raw.github.com/harrtho/alfred-convert/master/demo.gif
-[downloads-shield]: https://img.shields.io/github/downloads/harrtho/alfred-convert/total.svg
+[deanishe]: https://github.com/deanishe
+[docopt]: https://github.com/docopt/docopt
 [fontawesome]: https://fortawesome.github.io/Font-Awesome/
-[ghissues]: https://github.com/harrtho/alfred-convert/issues
-[ghpulls]: https://github.com/harrtho/alfred-convert/pulls
-[ghreleases]: https://github.com/harrtho/alfred-convert/releases
-[license-shield]: https://img.shields.io/github/license/harrtho/alfred-convert.svg
-[mit-license]: https://opensource.org/licenses/MIT
+[gh-issues]: https://github.com/harrtho/alfred-convert/issues
+[gh-latest-release]: https://github.com/harrtho/alfred-convert/releases/latest
+[gh-pulls]: https://github.com/harrtho/alfred-convert/pulls
+[gh-releases]: https://github.com/harrtho/alfred-convert/releases
+[license-bsd]: https://github.com/hgrecco/pint/blob/master/LICENSE
+[license-mit]: https://opensource.org/licenses/MIT
 [openx-appid]: https://openexchangerates.org/account/app-ids
 [openx-free]: https://openexchangerates.org/signup/free
 [openx]: https://openexchangerates.org/
-[pintdocs]: https://pint.readthedocs.org/en/latest/index.html
-[pinthowto]: https://pint.readthedocs.org/en/latest/defining.html
+[pintdocs]: https://pint.readthedocs.io/en/latest/index.html
+[pinthowto]: https://pint.readthedocs.io/en/latest/user/formatting.html
 [pintrepo]: https://github.com/hgrecco/pint
 [pintunits]: https://github.com/hgrecco/pint/blob/master/pint/default_en.txt
-[releases]: https://github.com/harrtho/alfred-convert/releases
-[v1.1]: https://github.com/deanishe/alfred-convert/releases/tag/v1.1
-[v1.2]: https://github.com/deanishe/alfred-convert/releases/tag/v1.2
-[v2.0]: https://github.com/deanishe/alfred-convert/releases/tag/v2.0
-[v2.2.1]: https://github.com/deanishe/alfred-convert/releases/tag/v2.2.1
-[v2.2]: https://github.com/deanishe/alfred-convert/releases/tag/v2.2
-[v2.3]: https://github.com/deanishe/alfred-convert/releases/tag/v2.3
-[v2.4]: https://github.com/deanishe/alfred-convert/releases/tag/v2.4
-[v2.5]: https://github.com/deanishe/alfred-convert/releases/tag/v2.5
-[v2.6]: https://github.com/deanishe/alfred-convert/releases/tag/v2.6
-[v3.0]: https://github.com/deanishe/alfred-convert/releases/tag/v3.0
-[v3.1]: https://github.com/deanishe/alfred-convert/releases/tag/v3.1
-[v3.2.1]: https://github.com/deanishe/alfred-convert/releases/tag/v3.2.1
-[v3.2.2]: https://github.com/deanishe/alfred-convert/releases/tag/v3.2.2
-[v3.2]: https://github.com/deanishe/alfred-convert/releases/tag/v3.2
-[v3.3.1]: https://github.com/deanishe/alfred-convert/releases/tag/v3.3.1
-[v3.3]: https://github.com/deanishe/alfred-convert/releases/tag/v3.3
-[v3.4]: https://github.com/deanishe/alfred-convert/releases/tag/v3.4
-[v3.5.1]: https://github.com/deanishe/alfred-convert/releases/tag/v3.5.1
-[v3.5.2]: https://github.com/deanishe/alfred-convert/releases/tag/v3.5.2
-[v3.5.3]: https://github.com/deanishe/alfred-convert/releases/tag/v3.5.3
-[v3.5]: https://github.com/deanishe/alfred-convert/releases/tag/v3.5
-[v3.6.0]: https://github.com/deanishe/alfred-convert/releases/tag/v3.6.0
-[v3.6.1]: https://github.com/deanishe/alfred-convert/releases/tag/v3.6.1
-[v3.6.2]: https://github.com/deanishe/alfred-convert/releases/tag/v3.6.2
-[v3.7.0]: https://github.com/deanishe/alfred-convert/releases/tag/v3.7.0
-[v4.0.0]: https://github.com/harrtho/alfred-convert/releases/tag/v4.0.0
-[version-shield]: https://img.shields.io/github/release/harrtho/alfred-convert.svg
+[pintcontext]: https://pint.readthedocs.io/en/latest/user/contexts.html
+[preview]: img/preview.png
+[shield-downloads]: https://img.shields.io/github/downloads/harrtho/alfred-convert/total.svg
+[shield-license]: https://img.shields.io/github/license/harrtho/alfred-convert.svg
+[shield-version]: https://img.shields.io/github/release/harrtho/alfred-convert.svg

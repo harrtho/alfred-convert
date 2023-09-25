@@ -1,26 +1,15 @@
 
-Supported Currencies
-====================
+# Supported Currencies
 
-<!-- MarkdownTOC autolink="true" bracket="round" depth="3" autoanchor="true" -->
-
-- [Fiat currencies](#fiat-currencies)
-- [Cryptocurrencies](#cryptocurrencies)
-- [Unsupported currencies](#unsupported-currencies)
-
-<!-- /MarkdownTOC -->
-
-
-<a name="fiat-currencies"></a>
-Fiat currencies
----------------
+## Fiat Currencies
 
 Exchange rates are downloaded from [ExchangeRate-API.com][xapi] and [OpenExchangeRates.org][openx].
 
-The following fiat currencies are supported by the workflow (currencies marked with `*` require an API key for OpenExchangeRates.org):
+The following fiat currencies are supported by the workflow (currencies marked with `*` require an
+API key for OpenExchangeRates.org):
 
-| Symbol |                  Name                  |
-|--------|----------------------------------------|
+| Symbol | Name                                   |
+| ------ | -------------------------------------- |
 | AED    | United Arab Emirates Dirham            |
 | AFN    | Afghan Afghani \*                      |
 | ALL    | Albanian Lek \*                        |
@@ -193,17 +182,14 @@ The following fiat currencies are supported by the workflow (currencies marked w
 | ZAR    | South African Rand                     |
 | ZMW    | Zambian Kwacha                         |
 
-
-<a name="cryptocurrencies"></a>
-Cryptocurrencies
-----------------
+## Cryptocurrencies
 
 Exchange rates are downloaded from [CryptoCompare.com][cryptocompare].
 
 The following cryptocurrencies are supported by the workflow:
 
-|  Symbol  |                 Name                 |
-|----------|--------------------------------------|
+| Symbol   | Name                                 |
+| -------- | ------------------------------------ |
 | ABC      | AB-Chain                             |
 | ABY      | ArtByte                              |
 | AC       | Asia Coin                            |
@@ -1659,15 +1645,14 @@ The following cryptocurrencies are supported by the workflow:
 | ZXT      | Zcrypt                               |
 | ZYD      | ZayedCoin                            |
 
+## Unsupported Currencies
 
-<a name="unsupported-currencies"></a>
-Unsupported currencies
-----------------------
+The following (crypto)currencies are unsupported. Some have symbols that conflict with other
+currencies, and others cannot be understood by the `pint` library as they start with digits or
+end with `*`.
 
-The following (crypto)currencies are unsupported. Some have symbols that conflict with other currencies, and others cannot be understood by the `pint` library as they start with digits or end with `*`.
-
-| Symbol |                     Name                     |
-|--------|----------------------------------------------|
+| Symbol | Name                                         |
+| ------ | -------------------------------------------- |
 | 007    | 007 coin                                     |
 | 1337   | 1337                                         |
 | 1CR    | 1Credit                                      |
